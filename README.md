@@ -1,2 +1,2 @@
 # springai
-Muktiple Usage of Spring AI
+Multiple Usage of Spring AI
