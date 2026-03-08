@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Support Ticket Search Helper</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; padding-top: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; }
+        input[type="text"] { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd; }
+        button { padding: 10px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .response { margin-top: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 4px; }
+        .ticket-list { list-style-type: none; padding: 0; }
+        .ticket-item { margin-bottom: 15px; padding: 10px; border-bottom: 1px solid #ddd; }
+        .ticket-title { font-weight: bold; font-size: 1.2em; color: #4CAF50; }
+        .ticket-content { margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Support Ticket Search Helper</h2>
+
+        <!-- Form for ticket search query -->
+        <form th:action="@{/supportTicketSearchHelper}" method="post">
+            <div class="form-group">
+                <label for="query">Enter Your Issue or Query:</label>
+                <input type="text" id="query" name="query" placeholder="Type your issue or query here..." required>
+            </div>
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Display search results if available -->
+        <div class="response" th:if="${response}">
+            <h3>Search Results:</h3>
+            <ul class="ticket-list">
+                <!-- Loop through each document in the response -->
+                <li th:each="document : ${response}" class="ticket-item">
+                    <span class="ticket-title" th:text="${document.text}">Ticket Content</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+Ticket #1: Issue with Password Reset
+Customer: John Doe
+Description: I am unable to reset my password. Every time I try to reset it, I receive an error message saying "Unable to process your request." I have tried multiple times, but it keeps failing. Can you assist me with this issue?
+
+Ticket #2: Billing Error - Incorrect Charge
+Customer: Sarah Smith
+Description: I noticed an incorrect charge on my credit card for the last month. It seems like I was billed twice for the same service. Could you please check and correct this issue? 
+
+Ticket #3: Unable to Access My Account
+Customer: Alex Johnson
+Description: I cannot log into my account anymore. When I enter my credentials, the website redirects me to a "403 Forbidden" page. I have tried clearing my browser cache, but the issue persists. Please help!
+
+Ticket #4: Shipping Delay - Order #98765
+Customer: Emily Davis
+Description: My order #98765 was supposed to arrive last week, but it hasn’t been delivered yet. Could you please provide an update on the shipping status? 
+
+Ticket #5: Product Defect - Broken Screen on Arrival
+Customer: Michael Brown
+Description: I received my smartphone order today, but the screen was cracked right out of the box. I would like a replacement or a refund. Can you help me with this issue?
+
+Ticket #6: Feature Request - Dark Mode for the App
+Customer: Jessica Wilson
+Description: It would be great if the app had a dark mode feature. I find it much easier on the eyes, especially at night. Please consider adding this feature in the next update.
+
+Ticket #7: Subscription Cancellation Request
+Customer: James White
+Description: I would like to cancel my subscription to your service. I have already tried using the cancellation option in my account settings, but I’m unable to do so. Please assist me in canceling my subscription.
+
+Ticket #8: Unable to Make Payments
+Customer: Olivia Martinez
+Description: I am trying to make a payment for my recent purchase, but the payment gateway keeps failing. It says "Payment declined." I have checked my card details and they are correct. Can you help me resolve this?
+
+Ticket #9: Refund for Unused Service
+Customer: Noah Harris
+Description: I am requesting a refund for the service I subscribed to but didn’t use. I was charged, but I haven't been able to use the service yet. Could you please process a refund for this?
+
+Ticket #10: Login Issues with Social Media Accounts
+Customer: Liam Taylor
+Description: I am unable to log into my account using my Facebook login. Every time I try, it takes me to the homepage. I’ve already tried reconnecting my account to Facebook, but it still doesn’t work. Please fix this issue.
