@@ -98,6 +98,120 @@ Based on the current project structure, this app includes:
 - Pinecone vector database integration
 - OpenAI API (Chat, Image, Embeddings, Moderation, etc.)
 
+## Architecture overview
+
+This diagram shows how `OpenAiService` orchestrates different AI features (moderation, RAG, image processing, embeddings, speech, chat) through Spring AI clients and external APIs:
+
+```mermaid
+flowchart TB
+    %% Layers
+    subgraph UI["Presentation Layer (Thymeleaf)"]
+        T1["templates/*.html<br/>askAnything, moderation, embedDemo,<br/>imageGenerator, speechToText, etc."]
+        B["Browser/User"]
+    end
+
+    subgraph WEB["Web Layer (Spring MVC Controllers)"]
+        C_TEXT["text/* controllers"]
+        C_MOD["moderations/* controllers"]
+        C_IMG["imageprocessing/* controllers"]
+        C_EMB["embeddings/* controllers<br/>(JobSearchHelper, SimilarityFinder,<br/>SupportTicketSearchHelper)"]
+        C_SPEECH["speech/* controllers"]
+        C_RAG["rag/* controllers"]
+        C_TOOLS["tools/* controllers"]
+    end
+
+    subgraph SVC["Service Layer"]
+        OAS["OpenAiService<br/>(orchestrates all AI operations)"]
+    end
+
+    subgraph CORE["Spring AI Core Clients"]
+        CHAT["ChatClient"]
+        IMG["ImageModel<br/>(DALL-E)"]
+        EMB["EmbeddingModel"]
+        STT["AudioTranscriptionModel"]
+        TTS["AudioSpeechModel"]
+        MOD["ModerationModel"]
+        VS["VectorStore<br/>(Pinecone)"]
+        QA["QuestionAnswerAdvisor<br/>(RAG)"]
+        MEM["ChatMemory"]
+        TOOLS["Tool Calling"]
+    end
+
+    subgraph DATA["Data / Knowledge Base"]
+        RES["src/main/resources/*.txt<br/>job_listings, support_tickets,<br/>legal/product docs"]
+        INIT["DataInitializer<br/>(startup indexing)"]
+    end
+
+    subgraph EXT["External APIs"]
+        OPENAI["OpenAI APIs<br/>Chat, Embeddings, Image,<br/>Audio, Moderation"]
+        PINE["Pinecone Vector DB"]
+    end
+
+    %% User flow
+    B --> T1
+    T1 --> C_TEXT
+    T1 --> C_MOD
+    T1 --> C_IMG
+    T1 --> C_EMB
+    T1 --> C_SPEECH
+    T1 --> C_RAG
+    T1 --> C_TOOLS
+
+    %% Controllers to service
+    C_TEXT --> OAS
+    C_MOD --> OAS
+    C_IMG --> OAS
+    C_EMB --> OAS
+    C_SPEECH --> OAS
+    C_RAG --> OAS
+    C_TOOLS --> OAS
+
+    %% Service to AI clients
+    OAS --> CHAT
+    OAS --> IMG
+    OAS --> EMB
+    OAS --> STT
+    OAS --> TTS
+    OAS --> MOD
+    OAS --> VS
+    OAS --> QA
+    OAS --> TOOLS
+    CHAT --> MEM
+
+    %% External integrations
+    CHAT --> OPENAI
+    IMG --> OPENAI
+    EMB --> OPENAI
+    STT --> OPENAI
+    TTS --> OPENAI
+    MOD --> OPENAI
+    VS --> PINE
+
+    %% Data loading/indexing
+    INIT --> RES
+    INIT --> VS
+
+    %% RAG path emphasis
+    OAS -. "RAG answer(query)" .-> QA
+    QA -. "retrieve context" .-> VS
+    VS -. "top-k documents" .-> OAS
+    OAS -. "grounded response" .-> T1
+
+    style OAS fill:#ff9999
+    style PINE fill:#99ccff
+    style OPENAI fill:#99ff99
+```
+
+### Feature-to-OpenAiService method mapping
+
+- **Chat & Text Generation:** `generateAnswer()`, `getTravelGuidance()`, `getInterviewPreparation()`, `streamAnswer()` → `ChatClient`
+- **Moderation:** `moderate()` → `ModerationModel`
+- **Image Processing:** `generateImage()`, `analyzeImage()`, `analyzeDietHelperImage()` → image models / multimodal chat
+- **Embeddings & Vector Search:** `embed()`, `findSimilarity()`, `searchJobs()`, `searchTickets()` → embeddings + `VectorStore`
+- **Speech:** `speechToText()`, `textToSpeech()` → audio transcription/speech models
+- **Tool Calling:** `callAgent()` → tool-calling (e.g., Weather tools, Calculator)
+- **RAG:** `answerLegal()`, `answerProduct()` → `QuestionAnswerAdvisor` + `VectorStore` for retrieval-augmented generation
+
 ## Project structure
 
 Key paths:
