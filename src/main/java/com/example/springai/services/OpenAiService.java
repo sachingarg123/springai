@@ -1,6 +1,7 @@
 package com.example.springai.services;
 
 import com.example.springai.text.prompttemplate.dtos.CountryCuisines;
+import com.example.springai.tools.WeatherTools;
 import org.springframework.ai.audio.transcription.AudioTranscription;
 import org.springframework.ai.audio.transcription.AudioTranscriptionPrompt;
 import org.springframework.ai.chat.client.ChatClient;
@@ -13,6 +14,9 @@ import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.image.ImagePrompt;
+import org.springframework.ai.moderation.Moderation;
+import org.springframework.ai.moderation.ModerationPrompt;
+import org.springframework.ai.moderation.ModerationResult;
 import org.springframework.ai.openai.*;
 import org.springframework.ai.openai.api.OpenAiAudioApi;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -22,6 +26,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
@@ -47,6 +52,9 @@ public class OpenAiService {
 
     @Autowired
     private OpenAiAudioSpeechModel openAiAudioSpeechModel;
+
+    @Autowired
+    private OpenAiModerationModel openAiModerationModel;
 
     public OpenAiService(ChatClient.Builder builder, ChatMemory chatMemory) {
         this.chatClient = builder.defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
@@ -188,6 +196,19 @@ public float[] embed(String input) {
 
     public byte[] textToSpeech(String text){
         return openAiAudioSpeechModel.call(text);
+    }
+
+    public String callAgent(String query){
+        return chatClient.prompt(query).tools(new WeatherTools()).call().content();
+    }
+
+    public ModerationResult moderate(String content){
+        Moderation moderation =  openAiModerationModel.call(new ModerationPrompt(content)).getResult().getOutput();
+        return moderation.getResults().get(0);
+    }
+
+    public Flux<String> streamAnswer(String message) {
+        return  chatClient.prompt(new Prompt(message)).stream().content();
     }
 
 }

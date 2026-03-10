@@ -22,6 +22,8 @@ public class WeatherAgentController {
 
 	@PostMapping("/weatherAgent")
 	public String weatherAgent(@RequestParam("query") String query, Model model) {
+		String response = service.callAgent(query);
+		model.addAttribute("weatherInfo", response);
 		return "weatherTool";
 	}
 }

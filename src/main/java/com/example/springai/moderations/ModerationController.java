@@ -1,5 +1,6 @@
 package com.example.springai.moderations;
 
+import org.springframework.ai.moderation.ModerationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,8 @@ public class ModerationController {
 
     @PostMapping("/moderation")
     public String getChatResponse(@RequestParam("text") String text, Model model) {
+        ModerationResult result = chatService.moderate(text);
+        model.addAttribute("response", result);
         return "moderation";
     }
 }
